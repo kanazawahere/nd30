@@ -1,0 +1,49 @@
+<!-- nha-van:exempt — chỉ mục kỹ thuật cho AI agent, không phải văn bản gửi ra ngoài -->
+# nd30
+
+> Engine và quy chuẩn thể thức văn bản hành chính Việt Nam theo Nghị định 30/2020/NĐ-CP.
+> Phân loại 27+ loại văn bản, phỏng vấn lấy dữ liệu (không bịa), sinh file .docx đúng thể thức
+> (font/lề/cỡ chữ/vị trí thật), rồi validate bằng script.
+
+Đọc `SKILL.md` trước — đó là entry point đầy đủ (3 luật cứng, quy trình 5 pha, cheat-sheet
+thể thức tự chứa). Các file dưới đây chỉ cần đọc khi case cụ thể yêu cầu.
+
+## Bắt buộc đọc trước khi làm bất kỳ việc gì
+
+- [SKILL.md](https://raw.githubusercontent.com/kanazawahere/nd30/main/SKILL.md): entry point,
+  3 luật cứng, quy trình 5 pha, cheat-sheet thể thức, cách chạy trong sandbox (Gemini Spark) vs
+  máy có filesystem (Claude Code).
+
+## Scripts (dùng, đừng transcribe lại logic bên trong)
+
+- [scripts/generate_docx.py](https://raw.githubusercontent.com/kanazawahere/nd30/main/scripts/generate_docx.py):
+  **DÙNG CÁI NÀY khi chạy trong sandbox không có filesystem riêng** (Gemini Spark, ChatGPT
+  Code Interpreter...). Nhận 1 file JSON mô tả nội dung → xuất `.docx` đúng thể thức. Schema đầy
+  đủ nằm trong docstring đầu file — đọc docstring là đủ, KHÔNG cần đọc `build_docx.py`. Có cờ
+  `--validate` để sinh file + validate trong 1 lệnh duy nhất.
+- [examples/input-sample.json](https://raw.githubusercontent.com/kanazawahere/nd30/main/examples/input-sample.json):
+  ví dụ JSON đầy đủ đúng schema — đọc file này trước khi tự đoán tên field cho `generate_docx.py`.
+- [scripts/validate_docx.py](https://raw.githubusercontent.com/kanazawahere/nd30/main/scripts/validate_docx.py):
+  chấm điểm thể thức file `.docx` đã tạo — BẮT BUỘC chạy sau khi xuất file, trước khi báo "xong".
+- [scripts/build_docx.py](https://raw.githubusercontent.com/kanazawahere/nd30/main/scripts/build_docx.py):
+  helper python-docx cấp thấp (1165 dòng) — chỉ cần đọc khi có filesystem thật (Claude Code) và
+  case phức tạp mà `generate_docx.py` chưa cover.
+
+## References (đọc khi case không nằm trong cheat-sheet của SKILL.md)
+
+- [references/danh-muc-loai-vb.md](https://raw.githubusercontent.com/kanazawahere/nd30/main/references/danh-muc-loai-vb.md):
+  27+ loại văn bản + bảng nhận diện theo keyword.
+- [references/interview-questions.md](https://raw.githubusercontent.com/kanazawahere/nd30/main/references/interview-questions.md):
+  bộ câu hỏi phỏng vấn theo từng loại văn bản.
+- [references/the-thuc-nd30.md](https://raw.githubusercontent.com/kanazawahere/nd30/main/references/the-thuc-nd30.md):
+  thông số thể thức đầy đủ (cheat-sheet trong SKILL.md là bản rút gọn của file này).
+- [references/validation-checklist.md](https://raw.githubusercontent.com/kanazawahere/nd30/main/references/validation-checklist.md):
+  checklist thủ công bổ sung cho `validate_docx.py`.
+- [references/hien-thi-markdown-fallback.md](https://raw.githubusercontent.com/kanazawahere/nd30/main/references/hien-thi-markdown-fallback.md):
+  cách hiển thị bố cục 2 cột bằng bảng Markdown khi môi trường chưa cho xuất file.
+
+## Optional
+
+- [README.md](https://raw.githubusercontent.com/kanazawahere/nd30/main/README.md): giới thiệu
+  ngắn cho người đọc (không phải agent).
+- [templates/](https://github.com/kanazawahere/nd30/tree/main/templates): 5 mẫu `.docx` rỗng.
